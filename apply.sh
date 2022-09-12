@@ -57,8 +57,11 @@ fix_prop() {
 echo "Modifing build.prop for each image"
 fix_prop system $MountPointSystem/system/build.prop
 fix_prop vendor $MountPointVendor/build.prop
-fix_prop product $MountPointProduct/build.prop
-fix_prop system_ext $MountPointSystemExt/build.prop
+#fix_prop product $MountPointProduct/build.prop
+fix_prop product $MountPointProduct/etc/build.prop
+#fix_prop system_ext $MountPointSystemExt/build.prop
+fix_prop system_ext $MountPointSystemExt/etc/build.prop
+
 
 printf 'removing duplicate apps from system\n'
 rm -Rf $InstallDir/apex/com.android.extservices/
@@ -149,9 +152,12 @@ find $MountPointProduct/priv-app -type f -exec chcon --reference=$MountPointProd
 
 echo "Applying SELinux security contexts to props"
 chcon --reference=$MountPointSystem/system/etc $MountPointSystem/system/build.prop
-chcon --reference=$MountPointSystemExt/etc $MountPointSystemExt/build.prop
-chcon --reference=$MountPointProduct/etc $MountPointProduct/build.prop
+#chcon --reference=$MountPointSystemExt/etc $MountPointSystemExt/build.prop
+#chcon --reference=$MountPointProduct/etc $MountPointProduct/build.prop
 chcon --reference=$MountPointVendor/etc $MountPointVendor/build.prop
+
+chcon --reference=$MountPointSystemExt/etc $MountPointSystemExt/etc/build.prop
+chcon --reference=$MountPointProduct/etc $MountPointProduct/etc/build.prop
 
 echo "Applying SELinux policy"
 SELinuxPolicy="(allow gmscore_app self (vsock_socket (read write create connect)))"
